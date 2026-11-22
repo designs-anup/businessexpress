@@ -1,0 +1,30 @@
+---
+import '../styles/global.css';
+import SeoSchema from '../components/shared/SeoSchema.astro';
+import type { SiteContent } from '../types/site';
+
+interface Props {
+  title: string;
+  description: string;
+  siteContent?: SiteContent;
+}
+
+const { title, description, siteContent } = Astro.props;
+const canonicalUrl = Astro.url.href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {siteContent && <SeoSchema content={siteContent} url={canonicalUrl} />}
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased">
+    <slot />
+  </body>
+</html>

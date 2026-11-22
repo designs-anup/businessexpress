@@ -1,0 +1,28 @@
+---
+import type { SiteContent } from '../../types/site';
+
+interface Props {
+  content: SiteContent;
+  url: string;
+}
+
+const { content, url } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': content.category || 'LocalBusiness',
+  name: content.businessName,
+  description: content.tagline,
+  telephone: content.phone,
+  email: content.email,
+  url,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: content.address,
+    addressLocality: content.city,
+    addressCountry: 'IN',
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

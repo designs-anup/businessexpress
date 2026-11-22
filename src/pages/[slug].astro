@@ -1,0 +1,31 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TemplateModern from '../components/templates/TemplateModern.astro';
+import { mockSites } from '../data/mockSites';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/404');
+}
+
+// Lookup in mockSites first (will connect to Supabase here next)
+const site = mockSites[slug.toLowerCase()];
+
+if (!site || !site.is_published) {
+  return new Response(null, { status: 404 });
+}
+
+// Cache at Cloudflare Edge for 5 minutes
+Astro.response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+---
+
+<BaseLayout
+  title={`${site.content.businessName} | ${site.content.city}`}
+  description={site.content.tagline}
+  siteContent={site.content}
+>
+  <TemplateModern content={site.content} />
+</BaseLayout>
